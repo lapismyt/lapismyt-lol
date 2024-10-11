@@ -17,7 +17,7 @@
       <label for="tags">Tags (comma-separated)</label>
       <input type="text" name="tags" id="tags" class="form-control" value="{{ article.tags if article else '' }}">
     </div>
-
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <button type="submit" class="btn btn-primary">{% if article %}Update{% else %}Create{% endif %}</button>
   </form>
 {% endblock %}
