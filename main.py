@@ -193,7 +193,10 @@ def telegram_oauth():
         db.session.add(user)
         db.session.commit()
     login_user(user)
-    return redirect(url_for('index'))
+    if not request.args.get('next', None):
+        return redirect(url_for('index'))
+    else:
+        return url_for(request.args.get('next', 'index'))
 
 
 @app.route('/logout')
