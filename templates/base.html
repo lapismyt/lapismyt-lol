@@ -48,7 +48,7 @@
         .navbar-link a:hover {
             color: #e0e0e0;
         }
-        .btn-login, .btn-logout &visited {
+        .btn-create-article &visited, .btn-logout &visited, .nav-link &visited {
             background-color: #007bff;
             border: none;
             padding: 10px 20px;
@@ -58,7 +58,7 @@
             margin: 0 10px;
             transition: color 0.3s ease;
         }
-        .btn-login:hover, .btn-logout:hover {
+        .btn-create-article:hover &visited, .btn-logout:hover &visited, .nav-link:hover &visited {
             background-color: #0056b3;
             transition: color 0.3s ease
         }
@@ -238,7 +238,7 @@
                     {% if current_user.is_authenticated %}
                         {% if current_user.is_admin %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('create_article') }}">Create Article</a>
+                                <a class="btn btn-create-article" href="{{ url_for('create_article') }}">Create Article</a>
                             </li>
                         {% endif %}
                         <li class="nav-item">
