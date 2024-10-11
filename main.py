@@ -73,6 +73,7 @@ class Article(db.Model):
     title = db.Column(db.String(150), nullable=False)
     content = db.Column(db.Text, nullable=False)
     tags = db.Column(db.String(100))
+    author = db.relationship('User', backref='articles')
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
