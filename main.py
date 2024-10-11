@@ -199,7 +199,7 @@ def like_article(article_id):
         flash('You liked the article.', 'success')
 
     db.session.commit()
-    return redirect(url_for('view_article', article_id=article_id))
+    return redirect(url_for('view_article', id=article_id))
 
 
 @app.route('/upload', methods=['GET', 'POST'])
