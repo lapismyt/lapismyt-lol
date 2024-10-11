@@ -21,11 +21,12 @@ from flask_login import (
     current_user
 )
 from flask_admin import Admin, AdminIndexView
-from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib import sqla
 import time
 import hmac
 import hashlib
 from username_generator import generate_username
+from flask_security import SQLAlchemyUserDatastore, Security
 
 load_dotenv()
 
@@ -71,9 +72,9 @@ class MyAdminIndexView(AdminIndexView):
         return redirect(url_for('login', next=request.url))
 
 
-class MyModelView(ModelView):
+class MyModelView(sqla.ModelView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.is_admin
+        return current_user.is_active and current_user.is_authenticated and current_user.is_admin
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('login', next=request.url))
@@ -83,8 +84,8 @@ with app.app_context():
     db.create_all()
 
 admin = Admin(app, name='lapismyt.lol')
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(Article, db.session))
+admin.add_view(MyModelView(User, db.session))
+admin.add_view(MyModelView(Article, db.session))
 
 
 @login_manager.user_loader
