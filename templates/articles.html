@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block style %}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination a {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: 1px solid var(--accent-color);
+  background-color: var(--dark-background);
+  color: var(--accent-color);
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.pagination span {
+  margin: 0 10px;
+  padding: 10px 20px;
+  color: var(--light-text-color);
+}
+
+.pagination a:hover {
+  background-color: var(--accent-color);
+  color: var(--dark-background);
+}
+{% endblock %}
+
+{% block content %}
+  <h2>All Articles</h2>
+  <ul>
+    {% for article in articles.items %}
+      <li>
+        <a href="{{ url_for('view_article', id=article.id) }}">{{ article.title }}</a>
+        <p><small>by {{ article.author.username }} on {{ article.created_at.strftime('%Y-%m-%d') }}</small></p>
+        {% if article.tags %}
+          <p><small>Tags: {{ article.tags }}</small></p>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <div class="pagination">
+    {% if articles.has_prev %}
+      <a href="{{ url_for('list_articles', page=articles.prev_num) }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ articles.page }} of {{ articles.pages }}</span>
+
+    {% if articles.has_next %}
+      <a href="{{ url_for('list_articles', page=articles.next_num) }}">Next</a>
+    {% endif %}
+  </div>
+
+  {% if current_user.is_authenticated and current_user.is_admin %}
+    <a href="{{ url_for('create_article') }}" class="btn btn-primary">Create Article</a>
+  {% endif %}
+{% endblock %}
+

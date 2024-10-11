@@ -1,6 +1,18 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<h3>Sorry, but...</h3>
-<p>This page not implemented now</p>
+  <div class="article">
+    <h1>{{ article.title }}</h1>
+    <p><strong>Author:</strong> {{ article.author.username }}</p>
+    <p><strong>Published:</strong> {{ article.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+    <p>{{ article.content }}</p>
+
+    {% if article.tags %}
+      <p><strong>Tags:</strong> {{ article.tags }}</p>
+    {% endif %}
+
+    {% if current_user.is_authenticated and current_user.is_admin %}
+      <a href="{{ url_for('edit_article', id=article.id) }}" class="btn btn-primary">Edit Article</a>
+    {% endif %}
+  </div>
 {% endblock %}

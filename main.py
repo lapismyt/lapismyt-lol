@@ -57,7 +57,6 @@ class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    category = db.Column(db.String(100))
     tags = db.Column(db.String(100))
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     author = db.relationship('User', backref=db.backref('articles', lazy=True))
@@ -112,27 +111,58 @@ def about():
     return render_template('about.html')
 
 
-@app.route('/create_article', methods=['GET', 'POST'])
+@app.route('/articles')
+@app.route('/articles/page/<int:page>')
+def list_articles(page=1):
+    per_page = request.args.get('per_page', 5, type=int)
+    articles = Article.query.order_by(Article.created_at.desc()).paginate(page=page, per_page=per_page)
+    return render_template('articles.html', articles=articles)
+
+
+@app.route('/articles/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_article(id):
+    article = Article.query.get_or_404(id)
+
+    if not current_user.is_admin:
+        flash('You do not have permission to edit this article.', 'danger')
+        return redirect(url_for('view_article', id=article.id))
+
+    if request.method == 'POST':
+        article.title = request.form['title']
+        article.content = request.form['content']
+        article.tags = request.form['tags']
+        db.session.commit()
+        flash('Article updated successfully!', 'success')
+        return redirect(url_for('view_article', id=article.id))
+
+    return render_template('edit_article.html', article=article)
+
+
+@app.route('/articles/new', methods=['GET', 'POST'])
 @login_required
 def create_article():
     if not current_user.is_admin:
-        flash('You do not have permission to create articles.', 'danger')
-        return redirect(url_for('index'))
+        flash('You do not have permission to create an article.', 'danger')
+        return redirect(url_for('list_articles'))
 
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        category = request.form['category']
-        tags = request.form.get('tags', '')
-
-        article = Article(title=title, content=content, category=category, tags=tags, author=current_user)
+        tags = request.form['tags']
+        article = Article(title=title, content=content, tags=tags, author_id=current_user.id)
         db.session.add(article)
         db.session.commit()
-
         flash('Article created successfully!', 'success')
-        return redirect(url_for('index'))
+        return redirect(url_for('list_articles'))
 
-    return render_template('create_article.html')
+    return render_template('edit_article.html', article=None)
+
+
+@app.route('/articles/<int:id>')
+def view_article(id):
+    article = Article.query.get_or_404(id)
+    return render_template('article.html', article=article)
 
 
 @app.route('/login')
