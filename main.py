@@ -27,7 +27,7 @@ import hmac
 import hashlib
 from username_generator import generate_username
 import werkzeug
-import datetime
+from datetime import datetime
 
 load_dotenv()
 
