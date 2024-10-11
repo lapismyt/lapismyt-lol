@@ -77,7 +77,7 @@ class Article(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     @property
-    def likes_count(self):
+    def likes(self):
         return len(self.likers)
 
 
