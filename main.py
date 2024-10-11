@@ -28,6 +28,7 @@ import hashlib
 from username_generator import generate_username
 import werkzeug
 from datetime import datetime
+from flask_wtf.csrf import CSRFProtect
 
 load_dotenv()
 
@@ -47,12 +48,23 @@ login_manager.init_app(app)
 
 tg_bot_token = os.getenv('TG_BOT_TOKEN')
 
+csrf = CSRFProtect(app)
+
+
+likes = db.Table('likes',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('article_id', db.Integer, db.ForeignKey('article.id'), primary_key=True)
+)
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     telegram_id = db.Column(db.String(100), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    articles = db.relationship('Article', backref='author', lazy=True)
+    liked_articles = db.relationship('Article', secondary=likes, lazy='subquery',
+                                     backref=db.backref('likers', lazy=True))
 
 
 class Article(db.Model):
@@ -168,27 +180,42 @@ def view_article(id):
     return render_template('article.html', article=article)
 
 
+@app.route('/like_article/<int:article_id>', methods=['POST'])
+@login_required
+def like_article(article_id):
+    article = Article.query.get_or_404(article_id)
+    if current_user.is_active and current_user.is_authenticated:
+        return redirect(url_for('login', next=url_for('view_article', article_id=article_id)))
+
+    if current_user in article.likers:
+        article.likers.remove(current_user)
+        flash('You unliked the article.', 'success')
+    else:
+        article.likers.append(current_user)
+        flash('You liked the article.', 'success')
+
+    db.session.commit()
+    return redirect(url_for('view_article', article_id=article_id))
+
+
+@app.route('/delete_article/<int:article_id>', methods=['POST'])
+@login_required
+def delete_article(article_id):
+    if not current_user.is_admin:
+        flash('You do not have permission to delete articles.', 'danger')
+        return redirect(url_for('view_article', article_id=article_id))
+
+    article = Article.query.get_or_404(article_id)
+    db.session.delete(article)
+    db.session.commit()
+
+    flash('Article has been deleted.', 'success')
+    return redirect(url_for('index'))
+
+
 @app.route('/login')
 def login():
     return render_template('login.html')
-    # telegram_token = request.args.get('auth_token')
-    # if telegram_token:
-    #     # Здесь нужно добавить валидацию токена через Telegram API
-    #     telegram_id = ...  # Получить telegram_id из валидации
-    #     username = ...     # Получить username
-    #
-    #     user = User.query.filter_by(telegram_id=telegram_id).first()
-    #     if not user:
-    #         user = User(telegram_id=telegram_id, username=username)
-    #         db.session.add(user)
-    #         db.session.commit()
-    #
-    #     login_user(user)
-    #     flash('You have successfully logged in!', 'success')
-    #     return redirect(url_for('index'))
-    # else:
-    #     flash('Login failed.', 'danger')
-    #     return redirect(url_for('index'))
 
 
 @app.route('/telegram_oauth')

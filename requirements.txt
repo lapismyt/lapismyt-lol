@@ -6,3 +6,4 @@ flask-sqlalchemy
 flask-oauthlib
 flask-admin
 flask-security
+flask-wtf

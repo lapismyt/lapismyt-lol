@@ -240,6 +240,9 @@
                             <li class="nav-item">
                                 <a class="btn btn-create-article" href="{{ url_for('create_article') }}">Create Article</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="btn btn-create-article" href="{{ url_for('upload') }}">Upload</a>
+                            </li>
                         {% endif %}
                         <li class="nav-item">
                             <a class="btn btn-logout" href="{{ url_for('logout') }}">Logout</a>
@@ -258,6 +261,7 @@
         <a href="/">Home</a>
         <a href="/about">About</a>
         <a href="/projects">Projects</a>
+        <a href="/articles">Articles</a>
         <a href="/tools">Tools</a>
     </nav>
 
