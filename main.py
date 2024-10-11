@@ -63,7 +63,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     telegram_id = db.Column(db.String(100), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-    articles = db.relationship('Article', backref='author_user', lazy=True)
+    articles = db.relationship('Article', backref='author', lazy=True)
     liked_articles = db.relationship('Article', secondary=likes, lazy='subquery',
                                      backref=db.backref('likers', lazy=True))
 
@@ -73,7 +73,6 @@ class Article(db.Model):
     title = db.Column(db.String(150), nullable=False)
     content = db.Column(db.Text, nullable=False)
     tags = db.Column(db.String(100))
-    author = db.relationship('User', backref='articles')
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
