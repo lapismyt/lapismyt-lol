@@ -110,28 +110,28 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
 
-@app.route('/projects')
+@app.route('/projects', methods=['GET', 'POST'])
 def projects():
     return render_template('projects.html')
 
 
-@app.route('/tools')
+@app.route('/tools', methods=['GET', 'POST'])
 def tools():
     return render_template('tools.html')
 
 
-@app.route('/about')
+@app.route('/about', methods=['GET', 'POST'])
 def about():
     return render_template('about.html')
 
 
-@app.route('/articles')
-@app.route('/articles/page/<int:page>')
+@app.route('/articles', methods=['GET', 'POST'])
+@app.route('/articles/page/<int:page>', methods=['GET', 'POST'])
 def list_articles(page=1):
     per_page = request.args.get('per_page', 5, type=int)
     articles = Article.query.order_by(Article.created_at.desc()).paginate(page=page, per_page=per_page)
@@ -178,13 +178,13 @@ def create_article():
     return render_template('edit_article.html', article=None)
 
 
-@app.route('/articles/<int:id>')
+@app.route('/articles/<int:id>', methods=['GET', 'POST'])
 def view_article(id):
     article = Article.query.get_or_404(id)
     return render_template('article.html', article=article)
 
 
-@app.route('/like_article/<int:article_id>', methods=['POST'])
+@app.route('/like_article/<int:article_id>', methods=['GET', 'POST'])
 @login_required
 def like_article(article_id):
     article = Article.query.get_or_404(article_id)
@@ -227,7 +227,7 @@ def upload_file():
     return render_template('upload.html', message=message)
 
 
-@app.route('/uploads/<path:filename>', methods=['GET'])
+@app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
 def download_file(filename):
     safe_filename = secure_filename(filename)
     try:
@@ -236,7 +236,7 @@ def download_file(filename):
         abort(404)
 
 
-@app.route('/delete_article/<int:article_id>', methods=['POST'])
+@app.route('/delete_article/<int:article_id>', methods=['GET', 'POST'])
 @login_required
 def delete_article(article_id):
     if not current_user.is_admin:
@@ -251,12 +251,12 @@ def delete_article(article_id):
     return redirect(url_for('index'))
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
 
 
-@app.route('/telegram_oauth')
+@app.route('/telegram_oauth', methods=['GET', 'POST'])
 def telegram_oauth():
     bot_token = tg_bot_token
     hash_string = request.args.get('hash')
@@ -294,7 +294,7 @@ def telegram_oauth():
     return redirect(request.args.get('next', url_for('index')))
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
