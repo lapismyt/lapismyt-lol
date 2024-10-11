@@ -26,7 +26,6 @@ import time
 import hmac
 import hashlib
 from username_generator import generate_username
-from flask_security import SQLAlchemyUserDatastore, Security
 
 load_dotenv()
 
