@@ -27,6 +27,7 @@ import hmac
 import hashlib
 from username_generator import generate_username
 import werkzeug
+import datetime
 
 load_dotenv()
 
@@ -61,6 +62,7 @@ class Article(db.Model):
     tags = db.Column(db.String(100))
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     author = db.relationship('User', backref=db.backref('articles', lazy=True))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class MyAdminIndexView(AdminIndexView):
