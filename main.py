@@ -264,7 +264,7 @@ def telegram_oauth():
     username = request.args.get('username', 'undefined')
     auth_date = request.args.get('auth_date')
     data_check_string = ['{}={}'.format(k, v)
-                         for k, v in request.args.items() if k != 'hash']
+                         for k, v in request.args.items() if k != 'hash' and k != 'next']
     data_check_string = '\n'.join(sorted(data_check_string))
     secret_key = hashlib.sha256(bot_token.encode()).digest()
     built_hash = hmac.new(secret_key,
