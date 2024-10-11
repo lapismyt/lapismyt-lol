@@ -142,7 +142,7 @@ def login():
 
 
 @app.route('/telegram_oauth')
-def telegram_oauth(request):
+def telegram_oauth():
     bot_token = tg_bot_token
     hash_string = request.args.get('hash')
     user_id = request.args.get('user_id')
