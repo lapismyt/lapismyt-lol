@@ -31,7 +31,7 @@ button {
     display: flex;
     width:100%;
 }
-#file input[type=file] {
+.file {
     display: none;
 }
 {% endblock %}
@@ -39,15 +39,17 @@ button {
 {% block content %}
 <h2>Upload File</h2>
 <div class="upload_container">
-    <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
-        <input type="file" id="file" name="file" required>
-        <label for="file">
-            <span class="btn btn-logout">Choose file</span>
-            <span>Up to 1GB</span>
-        </label>
-        <br/>
-        <button class="btn btn-logout" type="submit">Upload</button>
-    </form>
+    <div>
+        <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+            <input type="file" id="file" name="file" class="file" required>
+            <label for="file">
+                <span class="btn btn-logout">Choose file</span>
+                <span>Up to 1GB</span>
+            </label>
+            <br/>
+            <button class="btn btn-logout" type="submit">Upload</button>
+        </form>
+    </div>
 </div>
 
 {% if message %}
