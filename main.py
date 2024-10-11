@@ -200,7 +200,7 @@ def like_article(article_id):
 
 @app.route('/upload', methods=['GET', 'POST'])
 @login_required
-def upload():
+def upload_file():
     if not (current_user.is_active and current_user.is_authenticated and current_user.is_admin):
         return redirect(url_for('login', next=url_for('upload')))
     message = None
@@ -218,13 +218,13 @@ def upload():
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            message = 'File successfully uploaded.'
+            message = f'File successfully uploaded at {url_for("download_file", path=filename)}.'
 
     return render_template('upload.html', message=message)
 
 
 @app.route('/uploads/<path:filename>', methods=['GET'])
-def download(filename):
+def download_file(filename):
     safe_filename = secure_filename(filename)
     try:
         return send_from_directory(app.config['UPLOAD_FOLDER'], safe_filename)
