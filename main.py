@@ -62,7 +62,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), unique=True, nullable=False)
     telegram_id = db.Column(db.String(100), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-    articles = db.relationship('Article', backref='author', lazy=True)
+    articles = db.relationship('Article', backref='author_user', lazy=True)
     liked_articles = db.relationship('Article', secondary=likes, lazy='subquery',
                                      backref=db.backref('likers', lazy=True))
 
@@ -73,7 +73,6 @@ class Article(db.Model):
     content = db.Column(db.Text, nullable=False)
     tags = db.Column(db.String(100))
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    author = db.relationship('User', backref=db.backref('articles', lazy=True))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 
@@ -197,6 +196,12 @@ def like_article(article_id):
     db.session.commit()
     return redirect(url_for('view_article', article_id=article_id))
 
+
+
+@app.route('/upload')
+@login_required
+def upload():
+    pass
 
 @app.route('/delete_article/<int:article_id>', methods=['POST'])
 @login_required
