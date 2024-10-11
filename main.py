@@ -29,6 +29,7 @@ from username_generator import generate_username
 import werkzeug
 from datetime import datetime
 from flask_wtf.csrf import CSRFProtect
+from werkzeug.utils import secure_filename
 
 load_dotenv()
 
@@ -37,6 +38,7 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 1024
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lapismyt-lol.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -50,11 +52,10 @@ tg_bot_token = os.getenv('TG_BOT_TOKEN')
 
 csrf = CSRFProtect(app)
 
-
 likes = db.Table('likes',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('article_id', db.Integer, db.ForeignKey('article.id'), primary_key=True)
-)
+                 db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+                 db.Column('article_id', db.Integer, db.ForeignKey('article.id'), primary_key=True)
+                 )
 
 
 class User(UserMixin, db.Model):
@@ -197,11 +198,40 @@ def like_article(article_id):
     return redirect(url_for('view_article', article_id=article_id))
 
 
-
-@app.route('/upload')
+@app.route('/upload', methods=['GET', 'POST'])
 @login_required
-def upload():
-    pass
+def upload_file():
+    if not (current_user.is_active and current_user.is_authenticated and current_user.is_admin):
+        return redirect(url_for('login', next=url_for('upload')))
+    message = None
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+
+        file = request.files['file']
+
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            message = 'File successfully uploaded.'
+
+    return render_template('upload.html', message=message)
+
+
+@app.route('/uploads/<path:filename>', methods=['GET'])
+def uploaded_file(filename):
+    # Ensure the filename is secure
+    safe_filename = secure_filename(filename)
+    try:
+        return send_from_directory(app.config['UPLOAD_FOLDER'], safe_filename)
+    except FileNotFoundError:
+        abort(404)
+
 
 @app.route('/delete_article/<int:article_id>', methods=['POST'])
 @login_required
@@ -258,10 +288,7 @@ def telegram_oauth():
         db.session.add(user)
         db.session.commit()
     login_user(user)
-    if not request.args.get('next', None):
-        return redirect(url_for('index'))
-    else:
-        return url_for(request.args.get('next', 'index'))
+    return redirect(request.args.get('next', url_for('index')))
 
 
 @app.route('/logout')
