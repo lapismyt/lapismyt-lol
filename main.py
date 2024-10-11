@@ -20,7 +20,7 @@ from flask_login import (
     logout_user,
     current_user
 )
-from flask_admin import Admin
+from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 import time
 import hmac
@@ -41,6 +41,7 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+login_manager.init_app(app)
 
 tg_bot_token = os.getenv('TG_BOT_TOKEN')
 
@@ -62,10 +63,26 @@ class Article(db.Model):
     author = db.relationship('User', backref=db.backref('articles', lazy=True))
 
 
+class MyAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login', next=request.url))
+
+
+class MyModelView(ModelView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.is_admin
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('login', next=request.url))
+
+
 with app.app_context():
     db.create_all()
 
-admin = Admin(app)
+admin = Admin(app, name='lapismyt.lol')
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Article, db.session))
 
