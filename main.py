@@ -76,6 +76,10 @@ class Article(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    @property
+    def likes_count(self):
+        return len(self.likers)
+
 
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
