@@ -245,11 +245,9 @@
                             <a class="btn btn-logout" href="{{ url_for('logout') }}">Logout</a>
                         </li>
                     {% else %}
-                        {% block login_btn %}
                         <li class="nav-item">
-                            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="lapismyt_lol_bot" data-size="large" data-userpic="false" data-radius="8" data-auth-url="http://lapismyt.lol/telegram_oauth" data-request-access="write"></script>
+                            {% block login_btn %}<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="lapismyt_lol_bot" data-size="large" data-userpic="false" data-radius="8" data-auth-url="http://lapismyt.lol/telegram_oauth" data-request-access="write"></script>{% endblock %}
                         </li>
-                        {% endblock %}
                     {% endif %}
                 </ul>
             </div>
