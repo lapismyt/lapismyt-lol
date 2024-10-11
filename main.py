@@ -65,7 +65,7 @@ class Article(db.Model):
 
 class MyAdminIndexView(AdminIndexView):
     def is_accessible(self):
-        return current_user.is_authenticated and current_user.is_admin
+        return current_user.is_active and current_user.is_authenticated and current_user.is_admin
 
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for('login', next=request.url))
