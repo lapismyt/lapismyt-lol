@@ -145,7 +145,7 @@ def login():
 def telegram_oauth():
     bot_token = tg_bot_token
     hash_string = request.args.get('hash')
-    user_id = request.args.get('user_id')
+    user_id = request.args.get('id')
     username = request.args.get('username', 'undefined')
     auth_date = request.args.get('auth_date')
     data_check_string = ['{}={}'.format(k, v)
@@ -169,7 +169,10 @@ def telegram_oauth():
                 tuser = User.query.filter_by(username=username).first()
                 if isinstance(tuser, None):
                     break
-        user = User(telegram_id=str(user_id), username=username, is_admin=(True if str(user_id) == str(os.getenv('ALWAYS_ADMIN')) else False))
+        is_admin = False
+        if str(user_id) == str(os.getenv('ALWAYS_ADMIN')):
+            is_admin = True
+        user = User(telegram_id=str(user_id), username=username, is_admin=is_admin)
         db.session.add(user)
         db.session.commit()
     login_user(user)
