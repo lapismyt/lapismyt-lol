@@ -1,0 +1,7 @@
+flask
+websockets
+flask-login
+python-dotenv
+flask-sqlalchemy
+flask-oauthlib
+flask-admin

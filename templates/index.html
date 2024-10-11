@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Welcome to lapismyt.lol!</h1>
+    <!--{% if current_user.is_authenticated %}
+        {% if current_user.is_admin %}
+            <a href="{{ url_for('create_article') }}" class="btn btn-primary">Create a new article</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    {% else %}
+        <a href="{{ url_for('login') }}" class="btn btn-success">Login with Telegram</a>
+    {% endif %}-->
+</div>
+{% endblock %}
