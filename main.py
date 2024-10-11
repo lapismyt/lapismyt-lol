@@ -23,6 +23,9 @@ from flask_login import (
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 import time
+import hmac
+import hashlib
+from username_generator import generate_username
 
 load_dotenv()
 
@@ -136,6 +139,41 @@ def login():
     # else:
     #     flash('Login failed.', 'danger')
     #     return redirect(url_for('index'))
+
+
+@app.route('/telegram_oauth')
+def telegram_oauth(request):
+    bot_token = tg_bot_token
+    hash_string = request.args.get('hash')
+    user_id = request.args.get('user_id')
+    username = request.args.get('username', 'undefined')
+    auth_date = request.args.get('auth_date')
+    data_check_string = ['{}={}'.format(k, v)
+                         for k, v in request.args.items() if k != 'hash']
+    data_check_string = '\n'.join(sorted(data_check_string))
+    secret_key = hashlib.sha256(bot_token.encode()).digest()
+    built_hash = hmac.new(secret_key,
+                          msg=data_check_string.encode(),
+                          digestmod=hashlib.sha256).hexdigest()
+    current_timestamp = int(time.time())
+    auth_timestamp = int(auth_date)
+    if current_timestamp - auth_timestamp > 86400:
+        return redirect(url_for('login'))
+    if built_hash != hash_string:
+        return redirect(url_for('login'))
+    user = User.query.filter_by(telegram_id=user_id).first()
+    if not user:
+        if username == 'undefined':
+            while True:
+                username = generate_username()
+                tuser = User.query.filter_by(username=username).first()
+                if isinstance(tuser, None):
+                    break
+        user = User(telegram_id=str(user_id), username=username, is_admin=(True if str(user_id) == str(os.getenv('ALWAYS_ADMIN')) else False))
+        db.session.add(user)
+        db.session.commit()
+    login_user(user)
+    return redirect(url_for('index'))
 
 
 @app.route('/logout')
