@@ -218,7 +218,7 @@ def upload_file():
         if file:
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            message = f'File successfully uploaded at {url_for("download_file", filename=filename)}.'
+            message = f'File successfully uploaded at {url_for("download_file", filename=filename, _external=True)}.'
 
     return render_template('upload.html', message=message)
 
