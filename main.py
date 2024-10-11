@@ -26,6 +26,7 @@ import time
 import hmac
 import hashlib
 from username_generator import generate_username
+import werkzeug
 
 load_dotenv()
 
@@ -235,6 +236,11 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('index'))
+
+
+@app.errorhandler(werkzeug.exceptions.NotFound)
+def handle_bad_request(e):
+    return render_template('not_found.html'), 400
 
 
 if __name__ == '__main__':
