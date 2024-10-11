@@ -202,7 +202,7 @@ def like_article(article_id):
 @login_required
 def upload_file():
     if not (current_user.is_active and current_user.is_authenticated and current_user.is_admin):
-        return redirect(url_for('login', next=url_for('upload')))
+        return redirect(url_for('login', next=url_for('upload_file')))
     message = None
     if request.method == 'POST':
         if 'file' not in request.files:
