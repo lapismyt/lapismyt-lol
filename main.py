@@ -188,8 +188,8 @@ def view_article(id):
 @login_required
 def like_article(article_id):
     article = Article.query.get_or_404(article_id)
-    if current_user.is_active and current_user.is_authenticated:
-        return redirect(url_for('login', next=url_for('view_article', article_id=article_id)))
+    if not (current_user.is_active and current_user.is_authenticated):
+        return redirect(url_for('login', next=url_for('view_article', id=article_id)))
 
     if current_user in article.likers:
         article.likers.remove(current_user)
