@@ -15,4 +15,4 @@ def generate_username():
     adjective = random.choice(adjectives)
     noun = random.choice(nouns)
     number = random.randint(1, 999)
-    return f"{adjective}-{noun}-{number}"
+    return f"{adjective}_{noun}{number}"
