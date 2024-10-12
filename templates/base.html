@@ -232,7 +232,6 @@
             }
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             header h1 {
                 font-size: 1.5rem;
@@ -241,6 +240,47 @@
             nav {
                 font-size: 0.9rem;
             }
+        }
+        .flash-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .flash-message {
+            margin-top: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            color: #fff;
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+            pointer-events: auto;
+        }
+
+        .flash-message.success {
+            background-color: #28a745;
+        }
+
+        .flash-message.error {
+            background-color: #dc3545;
+        }
+
+        .flash-message.info {
+            background-color: #17a2b8;
+        }
+
+        .flash-message.warning {
+            background-color: #ffc107;
         }
         {% block css %}{% endblock %}
     </style>
@@ -284,6 +324,16 @@
         <a href="/articles">Articles</a>
         <a href="/tools">Tools</a>
     </nav>
+
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
     <main>
         <div class="container mt-4">
@@ -332,5 +382,16 @@
         <p>{% block footer2 %}© 2024 lapismyt.lol. All rights reserved.{% endblock %}</p>
     </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+        setTimeout(function() {
+            var flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.remove();
+                }, 1000);
+            });
+        }, 5000);
+    </script>
 </body>
 </html>
