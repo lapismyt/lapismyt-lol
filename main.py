@@ -162,7 +162,7 @@ def send_message():
                 break
             for user in users:
                 try:
-                    bot.send_message(request.args.get('text', ''), parse_mode='HTML')
+                    bot.send_message(user.telegram_id, request.args.get('text', ''), parse_mode='HTML')
                     messages_sent += 1
                 except:
                     pass
