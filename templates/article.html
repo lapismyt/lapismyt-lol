@@ -4,11 +4,13 @@
 {{ article.title }}
 {% endblock %}
 
+{% block og_description %}
 {% if len(article.content) > 80 %}
-{% block og_description %}{{ article.content[:80] }}...{% endblock %}
+{{ article.content[:80] }}...
 {% else %}
-{% block og_description %}{{ article.content }}{% endblock %}
+{{ article.content }}
 {% endif %}
+{% endblock %}
 
 {% block content %}
   <h2>{{ article.title }}</h2>
