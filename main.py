@@ -147,7 +147,7 @@ def privacy_policy():
 
 @app.route('/send-message', methods=['GET', 'POST'])
 def send_message():
-    if not (current_user.active and current_user.authenticated and current_user.is_admin):
+    if not (current_user.is_active and current_user.is_authenticated and current_user.is_admin):
         flash('You do not have permission to do this!', 'danger')
         return redirect(url_for('index'))
     batch_size = 128
