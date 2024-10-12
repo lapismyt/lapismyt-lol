@@ -167,7 +167,7 @@ def send_message():
                 except:
                     pass
             offset += batch_size
-        flash(f'{messages_sent} messages sent successfully!', 'info')
+        flash(f'{messages_sent} messages sent successfully!', 'success')
         return redirect(url_for('index'))
     return render_template('send-message.html')
 
