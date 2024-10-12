@@ -150,10 +150,10 @@ def send_message():
     if not (current_user.is_active and current_user.is_authenticated and current_user.is_admin):
         flash('You do not have permission to do this!', 'danger')
         return redirect(url_for('index'))
-    batch_size = 128
-    messages_sent = 0
     if request.method == 'POST':
-        if not request.args.get('text', None):
+        batch_size = 128
+        messages_sent = 0
+        if not request.form.get('text', None):
             return redirect(url_for('index'))
         offset = 0
         while True:
@@ -162,7 +162,7 @@ def send_message():
                 break
             for user in users:
                 try:
-                    bot.send_message(user.telegram_id, request.args.get('text', ''), parse_mode='HTML')
+                    bot.send_message(user.telegram_id, request.form.get('text', ''), parse_mode='HTML')
                     messages_sent += 1
                 except:
                     pass
