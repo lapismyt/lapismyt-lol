@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block og_description %}
-{% if len(article.content) > 80 %}
+{% if article.content|length > 80 %}
 {{ article.content[:80] }}...
 {% else %}
 {{ article.content }}
