@@ -4,6 +4,12 @@
 
 {% block og_description %}{% if article.content|length > 80 %}{{ article.content[:80] }}...{% else %}{{ article.content }}{% endif %}{% endblock %}
 
+{% block style %}
+form {
+  display: inline-block;
+}
+{% endblock %}
+
 {% block content %}
   <h2>{{ article.title }}</h2>
   <p>By: {{ article.author.username }} on {{ article.created_at.strftime('%Y-%m-%d') }}</p>
