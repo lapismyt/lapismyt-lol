@@ -7,3 +7,4 @@ flask-oauthlib
 flask-admin
 flask-security
 flask-wtf
+waitress
