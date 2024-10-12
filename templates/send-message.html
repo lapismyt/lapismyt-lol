@@ -7,8 +7,7 @@
 <h2>Mail for users via Telegram</h2>
 <form method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-    <label for="text">Message</label>
-    <input type="text" id="text" name="text" required>
+    <input type="text" id="text" name="text" placeholder="Message" required>
     <br/>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
