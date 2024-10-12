@@ -31,6 +31,7 @@ from datetime import datetime
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
 from waitress import serve
+from telebot import TeleBot
 
 load_dotenv()
 
@@ -129,6 +130,16 @@ def tools():
 @app.route('/about', methods=['GET', 'POST'])
 def about():
     return render_template('about.html')
+
+
+@app.route('/terms')
+def terms():
+    return render_template('terms-of-use.html')
+
+
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy-policy.html')
 
 
 @app.route('/articles', methods=['GET', 'POST'])

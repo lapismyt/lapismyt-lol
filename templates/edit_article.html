@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% block og_title %}{% if article %}Edit "{{ article.title }}" on lapismyt.lol{% else %}Edit article on lapismyt.lol{% endif %}{% endblock %}
+{% block og_description %}Edit article on lapismyt.lol{% endblock %}
+
 {% block content %}
   <h2>{% if article %}Edit{% else %}Create{% endif %} Article</h2>
   <form action="{% if article %}{{ url_for('edit_article', id=article.id) }}{% else %}{{ url_for('create_article') }}{% endif %}" method="POST">
