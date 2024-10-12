@@ -4,7 +4,7 @@
 
 {% block og_description %}{% if article.content|length > 80 %}{{ article.content[:80] }}...{% else %}{{ article.content }}{% endif %}{% endblock %}
 
-{% block style %}
+{% block css %}
 form {
   display: inline-block;
 }
