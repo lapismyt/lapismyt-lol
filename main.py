@@ -6,7 +6,8 @@ from flask import (
     abort,
     send_from_directory,
     url_for,
-    flash
+    flash,
+    get_flashed_messages
 )
 import random
 import os
@@ -53,6 +54,8 @@ login_manager.init_app(app)
 tg_bot_token = os.getenv('TG_BOT_TOKEN')
 
 csrf = CSRFProtect(app)
+
+bot = TeleBot(tg_bot_token)
 
 likes = db.Table('likes',
                  db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
@@ -140,6 +143,33 @@ def terms():
 @app.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy-policy.html')
+
+
+@app.route('/send-message', methods=['GET', 'POST'])
+def send_message():
+    if not (current_user.active and current_user.authenticated and current_user.is_admin):
+        flash('You do not have permission to do this!', 'danger')
+        return redirect(url_for('index'))
+    batch_size = 128
+    messages_sent = 0
+    if request.method == 'POST':
+        if not request.args.get('text', None):
+            return redirect(url_for('index'))
+        offset = 0
+        while True:
+            users = User.query.offset(offset).limit(batch_size).all()
+            if not users:
+                break
+            for user in users:
+                try:
+                    bot.send_message(request.args.get('text', ''), parse_mode='HTML')
+                    messages_sent += 1
+                except:
+                    pass
+            offset += batch_size
+        flash(f'{messages_sent} messages sent successfully!', 'info')
+        return redirect(url_for('index'))
+    return render_template('send-message.html')
 
 
 @app.route('/articles', methods=['GET', 'POST'])
