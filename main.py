@@ -30,7 +30,7 @@ import werkzeug
 from datetime import datetime
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
-import waitress
+from waitress import serve
 
 load_dotenv()
 
@@ -310,4 +310,4 @@ def handle_bad_request(e):
 
 if __name__ == '__main__':
     # app.run('0.0.0.0', 80, debug=True)
-    waitress.serve(app, host='0.0.0.0', port=80)
+    serve(app, host='0.0.0.0', port=80, threads=1)
