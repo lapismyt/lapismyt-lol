@@ -6,7 +6,7 @@
     <meta property="og:title" content="{% block title_og %}lapismyt.lol{% endblock %}" />
     <meta property="og:locale" content="en_en" />
     <meta property="og:description" content="{% block description %}{% endblock %}"/>
-    <meta property="og:url" content="{% block url %}{{ url_for(request.endpoint) }}{% endblock %}" />
+    <meta property="og:url" content="{% block url %}{{ url_for(request.endpoint, **request.view_args, _external=True) }}{% endblock %}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}lapismyt.lol{% endblock %}</title>
