@@ -27,7 +27,7 @@ form {
   </form>
 
   {% if current_user.is_authenticated and current_user.is_admin %}
-    <form action="{{ url_for('edit_article', id=article.id) }}" method="GET">
+    <form action="{{ url_for('edit_article', id=article.id) }}" method="POST">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <input type="hidden" id="title" name="title" value="{{ article.title|safe }}" />
       <input type="hidden" id="content" name="content" value="{{ article.content|safe }}" />
