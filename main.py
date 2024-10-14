@@ -193,8 +193,8 @@ def send_message():
 
 
 @sitemapper.include(lastmod='2024-10-14')
-@app.route('/articles', methods=['GET', 'POST'])
 @app.route('/articles/page/<int:page>', methods=['GET', 'POST'])
+@app.route('/articles', methods=['GET', 'POST'])
 def list_articles(page=1):
     per_page = request.args.get('per_page', 5, type=int)
     articles = Article.query.order_by(Article.created_at.desc()).paginate(page=page, per_page=per_page)
@@ -241,7 +241,12 @@ def create_article():
     return render_template('edit_article.html', article=None)
 
 
-@sitemapper.include(lastmod='2024-10-14')
+def generate_article_ids():
+    articles = Article.query.all()
+    return {'id': [artcl.id for artcl in articles]}
+
+
+@sitemapper.include(url_variables=generate_article_ids, lastmod='2024-10-14')
 @app.route('/articles/<int:id>', methods=['GET', 'POST'])
 def view_article(id):
     article = Article.query.get_or_404(id)
@@ -369,7 +374,7 @@ def logout():
 
 @app.route("/sitemap.xml")
 def sitemap_xml():
-    return sitemapper.generate()
+    return sitemapper.generate(gzip=True)
 
 
 @app.errorhandler(werkzeug.exceptions.NotFound)
