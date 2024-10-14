@@ -368,7 +368,7 @@ def logout():
 
 
 @app.route("/sitemap.xml")
-def sitemap():
+def sitemap_xml():
     return sitemapper.generate()
 
 
