@@ -3,6 +3,7 @@
 {% block og_title %}{{ article.title }}{% endblock %}
 
 {% block og_description %}{% if article.content|length > 80 %}{{ article.content[:80] }}...{% else %}{{ article.content }}{% endif %}{% endblock %}
+{% block description %}{% if article.content|length > 80 %}{{ article.content[:80] }}...{% else %}{{ article.content }}{% endif %}{% endblock %}
 
 {% block css %}
 form {
@@ -13,7 +14,9 @@ form {
 {% block meta %}
 <meta property="og:type:article:author" content="{{ article.author.username }}" />
 <meta property="og:type:article:published_time" content="{{ article.created_at.isoformat() }}" />
-<meta property="og:type:article:tag" content="{{ article.tags }}" />
+<meta property="og:type:article:tag" content="{{ article.tags|safe }}" />
+<meta property="keywords" content="{{ article.tags|safe }}" />
+<meta property="author" content="{{ article.author.username }}" />
 {% endblock %}
 
 {% block content %}
