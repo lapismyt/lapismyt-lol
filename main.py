@@ -33,9 +33,11 @@ from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
 from waitress import serve
 from telebot import TeleBot
+from flask_sitemapper import Sitemapper
 
 load_dotenv()
 
+sitemapper = Sitemapper()
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
@@ -61,6 +63,8 @@ likes = db.Table('likes',
                  db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
                  db.Column('article_id', db.Integer, db.ForeignKey('article.id'), primary_key=True)
                  )
+
+sitemapper.init_app(app)
 
 
 class User(UserMixin, db.Model):
@@ -115,34 +119,50 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+@sitemapper.include(lastmod='2024-10-14')
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
 
+@sitemapper.include(lastmod='2024-10-14')
 @app.route('/projects', methods=['GET', 'POST'])
 def projects():
     return render_template('projects.html')
 
 
+@sitemapper.include(lastmod='2024-10-14')
 @app.route('/tools', methods=['GET', 'POST'])
 def tools():
     return render_template('tools.html')
 
 
+@sitemapper.include(lastmod='2024-10-14')
 @app.route('/about', methods=['GET', 'POST'])
 def about():
     return render_template('about.html')
 
 
+@sitemapper.include(lastmod='2024-10-14')
 @app.route('/terms')
 def terms():
     return render_template('terms-of-use.html')
 
 
+@sitemapper.include(lastmod='2024-10-14')
 @app.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy-policy.html')
+
+
+@app.route('/robots.txt')
+def robots_txt():
+    return send_from_directory('static', 'robots.txt')
+
+
+@app.route('/static/<path:static_file>')
+def sitemap(static_file):
+    return send_from_directory('static', secure_filename(static_file))
 
 
 @app.route('/send-message', methods=['GET', 'POST'])
@@ -172,6 +192,7 @@ def send_message():
     return render_template('send-message.html')
 
 
+@sitemapper.include(lastmod='2024-10-14')
 @app.route('/articles', methods=['GET', 'POST'])
 @app.route('/articles/page/<int:page>', methods=['GET', 'POST'])
 def list_articles(page=1):
@@ -220,6 +241,7 @@ def create_article():
     return render_template('edit_article.html', article=None)
 
 
+@sitemapper.include(lastmod='2024-10-14')
 @app.route('/articles/<int:id>', methods=['GET', 'POST'])
 def view_article(id):
     article = Article.query.get_or_404(id)
@@ -293,6 +315,7 @@ def delete_article(article_id):
     return redirect(url_for('index'))
 
 
+@sitemapper.include(lastmod='2024-10-14')
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
@@ -342,6 +365,11 @@ def logout():
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('index'))
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    return sitemapper.generate()
 
 
 @app.errorhandler(werkzeug.exceptions.NotFound)

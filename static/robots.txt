@@ -1,0 +1,17 @@
+User-agent:
+Crawl-delay: 1
+Host: lapismyt.lol
+Disallow: /admin
+Disallow: /admin/
+Disallow: /uploads/
+Disallow: /send-message
+Disallow: /upload
+Disallow: /articles/new
+Disallow: /articles/edit/
+Disallow: /like_article/
+Disallow: /delete_article/
+Disallow: /telegram-oauth
+Disallow: /logout
+Disallow: /articles/page/
+Disallow: /static/
+Sitemap: http://lapismyt.lol/sitemap.xml

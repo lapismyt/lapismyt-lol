@@ -9,3 +9,4 @@ flask-security
 flask-wtf
 waitress
 pytelegrambotapi
+flask-sitemapper
