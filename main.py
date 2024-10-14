@@ -119,37 +119,37 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-@sitemapper.include(lastmod='2024-10-14', changefreq = 'monthly')
+@sitemapper.include(lastmod='2024-10-14', changefreq='monthly')
 @app.route('/', methods=['GET', 'POST'])
 def index():
     return render_template('index.html')
 
 
-@sitemapper.include(lastmod='2024-10-14', changefreq = 'monthly')
+@sitemapper.include(lastmod='2024-10-14', changefreq='monthly')
 @app.route('/projects', methods=['GET', 'POST'])
 def projects():
     return render_template('projects.html')
 
 
-@sitemapper.include(lastmod='2024-10-14', changefreq = 'monthly')
+@sitemapper.include(lastmod='2024-10-14', changefreq='monthly')
 @app.route('/tools', methods=['GET', 'POST'])
 def tools():
     return render_template('tools.html')
 
 
-@sitemapper.include(lastmod='2024-10-14', changefreq = 'monthly')
+@sitemapper.include(lastmod='2024-10-14', changefreq='monthly')
 @app.route('/about', methods=['GET', 'POST'])
 def about():
     return render_template('about.html')
 
 
-@sitemapper.include(lastmod='2024-10-14', changefreq = 'monthly')
+@sitemapper.include(lastmod='2024-10-14', changefreq='monthly')
 @app.route('/terms')
 def terms():
     return render_template('terms-of-use.html')
 
 
-@sitemapper.include(lastmod='2024-10-14', changefreq = 'monthly')
+@sitemapper.include(lastmod='2024-10-14', changefreq='monthly')
 @app.route('/privacy-policy')
 def privacy_policy():
     return render_template('privacy-policy.html')
@@ -158,6 +158,12 @@ def privacy_policy():
 @app.route('/robots.txt')
 def robots_txt():
     return send_from_directory('static', 'robots.txt')
+
+
+@sitemapper.include(lastmod='2024-10-14', changefreq='monthly')
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static', 'favicon.ico')
 
 
 @app.route('/static/<path:static_file>')
@@ -192,7 +198,7 @@ def send_message():
     return render_template('send-message.html')
 
 
-@sitemapper.include(lastmod='2024-10-14', changefreq = 'monthly')
+@sitemapper.include(lastmod='2024-10-14', changefreq='monthly')
 @app.route('/articles/page/<int:page>', methods=['GET', 'POST'])
 @app.route('/articles', methods=['GET', 'POST'])
 def list_articles(page=1):
