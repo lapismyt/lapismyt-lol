@@ -34,6 +34,7 @@ from werkzeug.utils import secure_filename
 from waitress import serve
 from telebot import TeleBot
 from flask_sitemapper import Sitemapper
+from flaskext.markdown import Markdown
 
 load_dotenv()
 
@@ -65,6 +66,8 @@ likes = db.Table('likes',
                  )
 
 sitemapper.init_app(app)
+
+md = Markdown(app)
 
 
 class User(UserMixin, db.Model):
