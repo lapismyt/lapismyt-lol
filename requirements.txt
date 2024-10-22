@@ -10,3 +10,5 @@ flask-wtf
 waitress
 pytelegrambotapi
 flask-sitemapper
+flask-markdown
+markdown
