@@ -237,7 +237,7 @@ def create_article():
 
     if request.method == 'POST':
         title = request.form['title']
-        content = request.form['content']
+        content = markdown(request.form['content'])
         tags = request.form['tags']
         article = Article(title=title, content=content, tags=tags, author_id=current_user.id)
         db.session.add(article)
