@@ -2,8 +2,8 @@
 
 {% block og_title %}{{ article.title }}{% endblock %}
 
-{% block og_description %}{% if article.content|length > 80 %}{{ article.content|striptags[:80] }}...{% else %}{{ article.content|striptags }}{% endif %}{% endblock %}
-{% block description %}{% if article.content|length > 80 %}{{ article.content|striptags[:80] }}...{% else %}{{ article.content|striptags }}{% endif %}{% endblock %}
+{% block og_description %}{% if article.content|length > 80 %}{{ article.content|striptags|truncate(80) }}...{% else %}{{ article.content|striptags }}{% endif %}{% endblock %}
+{% block description %}{% if article.content|length > 80 %}{{ article.content|striptags|truncate(80) }}...{% else %}{{ article.content|striptags }}{% endif %}{% endblock %}
 
 {% block css %}
 form {
