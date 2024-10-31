@@ -115,6 +115,12 @@ admin.add_view(MyModelView(User, db.session))
 admin.add_view(MyModelView(Article, db.session))
 
 
+@app.before_request
+def check_req():
+    host = request.host
+    if host == "aeza.website":
+        return redirect("https://aeza.net/?ref=491405", code=301)
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
