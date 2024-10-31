@@ -1,3 +1,5 @@
 .env
 instance/
 lapismyt-lol.db
+key.pem
+cert.pem
