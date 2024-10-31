@@ -118,8 +118,17 @@ admin.add_view(MyModelView(Article, db.session))
 @app.before_request
 def check_req():
     host = request.host
-    if host == "aeza.website":
+    if host == "aeza.website" and not request.path.startswith('/.well-known/acme-challenge/'):
         return redirect("https://aeza.net/?ref=491405", code=301)
+
+@app.route('/.well-known/acme-challenge/<path:filename>')
+def serve_challenge(filename):
+    challenge_dir = '/var/www/lapismyt.lol/.well-known/acme-challenge'
+    file_path = os.path.join(challenge_dir, filename)
+    if os.path.exists(file_path):
+        return send_from_directory(challenge_dir, filename)
+    else:
+        abort(404)
 
 @login_manager.user_loader
 def load_user(user_id):
