@@ -131,7 +131,7 @@ def serve_challenge(filename):
         abort(404)
 
 @app.route('/local/<path:filename>')
-def serve_challenge(filename):
+def local_dwn(filename):
     challenge_dir = '/var/www/lapismyt.lol'
     file_path = os.path.join(challenge_dir, filename)
     if os.path.exists(file_path):
