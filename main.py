@@ -130,6 +130,15 @@ def serve_challenge(filename):
     else:
         abort(404)
 
+@app.route('/local/<path:filename>')
+def serve_challenge(filename):
+    challenge_dir = '/var/www/lapismyt.lol'
+    file_path = os.path.join(challenge_dir, filename)
+    if os.path.exists(file_path):
+        return send_from_directory(challenge_dir, filename)
+    else:
+        abort(404)
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
