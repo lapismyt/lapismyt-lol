@@ -415,4 +415,4 @@ def handle_bad_request(e):
 
 if __name__ == '__main__':
     # app.run('0.0.0.0', 80, debug=True)
-    serve(app, host='0.0.0.0', port=80, threads=1)
+    serve(app, host='0.0.0.0', port=int(os.getenv('PORT')), threads=1)
