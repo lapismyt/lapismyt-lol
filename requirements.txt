@@ -12,3 +12,4 @@ pytelegrambotapi
 flask-sitemapper
 flask-markdown
 markdown
+gunicorn
