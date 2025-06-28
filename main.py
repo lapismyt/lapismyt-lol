@@ -46,7 +46,7 @@ UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 1024
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lapismyt-lol.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////app/instance/lapismyt-lol.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
