@@ -4,7 +4,7 @@ ARG VENV=/opt/venv
 
 WORKDIR /app
 
-RUN adduser --disabled-login --gecos '' myuser
+RUN adduser --disabled-login --gecos '' www-lapismyt-lol
 
 RUN python -m venv ${VENV}
 
