@@ -13,3 +13,4 @@ flask-sitemapper
 flask-markdown
 markdown
 gunicorn
+psycopg2
