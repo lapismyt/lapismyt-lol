@@ -6,7 +6,10 @@ WORKDIR /app
 RUN adduser --disabled-login --gecos '' www-lapismyt-lol
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc && \
+    apt-get install -y --no-install-recommends \
+        gcc \
+        libpq-dev \
+        postgresql-server-dev-all && \
     rm -rf /var/lib/apt/lists/*
 
 RUN python -m venv ${VENV}
