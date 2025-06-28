@@ -115,11 +115,11 @@ admin.add_view(MyModelView(User, db.session))
 admin.add_view(MyModelView(Article, db.session))
 
 
-@app.before_request
-def check_req():
-    host = request.host
-    if host in ['www.aeza.website', 'aeza.website'] and not request.path.startswith('/.well-known/acme-challenge/'):
-        return redirect("https://aeza.net/?ref=491405", code=301)
+# @app.before_request
+# def check_req():
+#     host = request.host
+#     if host in ['www.aeza.website', 'aeza.website'] and not request.path.startswith('/.well-known/acme-challenge/'):
+#         return redirect("https://aeza.net/?ref=491405", code=301)
 
 @app.route('/.well-known/acme-challenge/<path:filename>')
 def serve_challenge(filename):
