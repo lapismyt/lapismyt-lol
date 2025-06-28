@@ -11,6 +11,8 @@ services:
       - .:/app
       - uploads:/app/uploads
     restart: unless-stopped
+    env_file:
+      - .env
 
 volumes:
   uploads:
